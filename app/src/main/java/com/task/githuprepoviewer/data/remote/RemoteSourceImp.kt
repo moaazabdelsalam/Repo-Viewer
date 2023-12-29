@@ -1,6 +1,10 @@
 package com.task.githuprepoviewer.data.remote
 
-class RemoteSourceImp(
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class RemoteSourceImp @Inject constructor(
     private val service: GitHubService
 ) : RemoteSource {
     override suspend fun getRepositoryList() = service.getRepositoryList()

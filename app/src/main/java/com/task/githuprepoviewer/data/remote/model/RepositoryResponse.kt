@@ -3,7 +3,7 @@ package com.task.githuprepoviewer.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class RepositoryListResponse(
+data class RepositoryResponse(
     @SerializedName("archive_url")
     val archiveUrl: String,
     @SerializedName("assignees_url")
@@ -27,7 +27,7 @@ data class RepositoryListResponse(
     @SerializedName("deployments_url")
     val deploymentsUrl: String,
     @SerializedName("description")
-    val description: String,
+    val description: String?,
     @SerializedName("downloads_url")
     val downloadsUrl: String,
     @SerializedName("events_url")
