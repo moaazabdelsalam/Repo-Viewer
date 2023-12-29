@@ -1,4 +1,8 @@
 package com.task.githuprepoviewer.data.local
 
-class LocalSourceImp : LocalSource {
+import javax.inject.Inject
+
+class LocalSourceImp @Inject constructor(
+
+) : LocalSource {
 }
