@@ -5,5 +5,6 @@ import com.task.githuprepoviewer.presentation.RepositoryItem
 import kotlinx.coroutines.flow.Flow
 
 interface Repo {
-    fun getRepositoryList(): Flow<ApiState<List<RepositoryItem>>>
+    suspend fun updateLocalRepositoryList()
+    fun getRepositoryList(): Flow<List<RepositoryItem>>
 }
