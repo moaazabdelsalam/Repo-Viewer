@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.domain.usecase.RepositoryListUseCase
 import com.task.githuprepoviewer.domain.usecase.UpdateLocalListUseCase
-import com.task.githuprepoviewer.presentation.RepositoryItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +23,9 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val TAG = "TAG HomeViewModel"
-    private val _repositoryListState: MutableStateFlow<ApiState<List<RepositoryItem>>> =
+    private val _repositoryListState: MutableStateFlow<ApiState<List<HomeRepositoryItem>>> =
         MutableStateFlow(ApiState.Loading)
-    val repositoryListState: StateFlow<ApiState<List<RepositoryItem>>>
+    val repositoryListState: StateFlow<ApiState<List<HomeRepositoryItem>>>
         get() = _repositoryListState.asStateFlow()
 
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->

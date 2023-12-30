@@ -6,6 +6,7 @@ import com.task.githuprepoviewer.data.remote.RemoteSource
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,6 +35,8 @@ class RepoImp @Inject constructor(
     override fun getFullRepositoryDetails(
         ownerName: String,
         repoName: String
-    ) = remoteSource.getFullRepositoryDetails(ownerName, repoName)
+    ) = remoteSource.getFullRepositoryDetails(ownerName, repoName).map {
+        it.convertToRepositoryResponse()
+    }
 
 }

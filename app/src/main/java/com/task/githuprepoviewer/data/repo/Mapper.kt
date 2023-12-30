@@ -1,18 +1,19 @@
 package com.task.githuprepoviewer.data.repo
 
 import com.task.githuprepoviewer.data.local.db.LocalRepositoryItem
-import com.task.githuprepoviewer.data.remote.model.RepositoryResponse
-import com.task.githuprepoviewer.presentation.RepositoryItem
+import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
+import com.task.githuprepoviewer.presentation.details.RepositoryDetails
+import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
 
-fun RepositoryResponse.convertToRepositoryItem(): RepositoryItem =
+/*fun RepositoryResponse.convertToRepositoryItem(): RepositoryItem =
     RepositoryItem(
         ownerName = owner.login,
         ownerAvatarUrl = owner.avatarUrl,
         repoName = name,
         repoDescription = description
-    )
+    )*/
 
-fun List<RepositoryResponse>.convertToLocalRepositoryItemsList(): List<LocalRepositoryItem> =
+fun List<RepositoryDetailsResponse>.convertToLocalRepositoryItemsList(): List<LocalRepositoryItem> =
     map {
         LocalRepositoryItem(
             id = it.id,
@@ -23,12 +24,30 @@ fun List<RepositoryResponse>.convertToLocalRepositoryItemsList(): List<LocalRepo
         )
     }
 
-fun List<LocalRepositoryItem>.convertToRepositoryItemsList(): List<RepositoryItem> =
+fun List<LocalRepositoryItem>.convertToRepositoryItemsList(): List<HomeRepositoryItem> =
     map {
-        RepositoryItem(
+        HomeRepositoryItem(
             ownerName = it.ownerName,
             ownerAvatarUrl = it.ownerAvatarUrl,
             repoName = it.repoName,
             repoDescription = it.repoDescription
         )
     }
+
+fun RepositoryDetailsResponse.convertToRepositoryResponse(): RepositoryDetails =
+    RepositoryDetails(
+        ownerName = owner.login,
+        ownerAvatarUrl = owner.avatarUrl,
+        ownerType = owner.type,
+        repoName = name,
+        repoDescription = description,
+        isPrivate = isPrivate,
+        stargazersCount = stargazersCount,
+        watchersCount = watchersCount,
+        forksCount = forksCount,
+        language = language,
+        topics = topics,
+        openIssuesCount = openIssuesCount,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )

@@ -38,11 +38,10 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.task.githuprepoviewer.R
 import com.task.githuprepoviewer.data.remote.ApiState
-import com.task.githuprepoviewer.presentation.RepositoryItem
 
 @Composable
 fun HomeScreen(
-    state: ApiState<List<RepositoryItem>>,
+    state: ApiState<List<HomeRepositoryItem>>,
     fontFamily: FontFamily,
     onItemClick: (String, String) -> Unit
 ) {
@@ -64,7 +63,7 @@ fun HomeScreen(
                         key = { it.ownerName + it.repoName }
                     ) {
                         RepoItem(
-                            repositoryItem = it,
+                            homeRepositoryItem = it,
                             onItemClick = onItemClick,
                             modifier = Modifier.fillMaxWidth(),
                             fontFamily
@@ -78,7 +77,7 @@ fun HomeScreen(
 
 @Composable
 fun RepoItem(
-    repositoryItem: RepositoryItem,
+    homeRepositoryItem: HomeRepositoryItem,
     onItemClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     fontFamily: FontFamily
@@ -89,16 +88,16 @@ fun RepoItem(
         ),
         modifier = modifier
             .padding(8.dp)
-            .clickable { onItemClick(repositoryItem.ownerName, repositoryItem.repoName) }
+            .clickable { onItemClick(homeRepositoryItem.ownerName, homeRepositoryItem.repoName) }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularAvatarImage(
-                    avatarUrl = repositoryItem.ownerAvatarUrl,
+                    avatarUrl = homeRepositoryItem.ownerAvatarUrl,
                     modifier = Modifier.size(25.dp).padding(end = 4.dp)
                 )
                 Text(
-                    text = repositoryItem.ownerName,
+                    text = homeRepositoryItem.ownerName,
                     modifier = Modifier.padding(horizontal = 4.dp),
                     style = TextStyle(
                         fontSize = 12.sp,
@@ -117,7 +116,7 @@ fun RepoItem(
                     )
                 )
                 Text(
-                    text = repositoryItem.repoName,
+                    text = homeRepositoryItem.repoName,
                     modifier = Modifier.padding(horizontal = 4.dp),
                     maxLines = 1,
                     style = TextStyle(
@@ -128,7 +127,7 @@ fun RepoItem(
                 )
             }
             Text(
-                text = repositoryItem.repoDescription ?: "",
+                text = homeRepositoryItem.repoDescription ?: "",
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = TextStyle(
                     fontSize = 16.sp,
@@ -138,7 +137,7 @@ fun RepoItem(
             )
             Row() {
                 StargazersCount(
-                    stargazersNumber = repositoryItem.starsCount.toString(),
+                    stargazersNumber = homeRepositoryItem.starsCount.toString(),
                     fontFamily = fontFamily
                 )
             }
@@ -160,8 +159,9 @@ fun CircularAvatarImage(
             failure = placeholder(ColorPainter(Color.Red)),
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop,
-            modifier = modifier
+            modifier = Modifier
                 .clip(CircleShape)
+                .fillMaxSize()
         )
     }
 }

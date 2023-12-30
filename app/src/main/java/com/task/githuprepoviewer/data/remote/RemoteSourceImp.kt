@@ -1,7 +1,5 @@
 package com.task.githuprepoviewer.data.remote
 
-import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton

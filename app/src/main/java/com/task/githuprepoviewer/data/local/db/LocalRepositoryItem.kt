@@ -11,5 +11,6 @@ data class LocalRepositoryItem(
     val ownerAvatarUrl: String,
     val repoName: String,
     val repoDescription: String?,
-    val starsCount: Int = 0
+    val starsCount: Int = 0,
+    val language: String = ""
 )

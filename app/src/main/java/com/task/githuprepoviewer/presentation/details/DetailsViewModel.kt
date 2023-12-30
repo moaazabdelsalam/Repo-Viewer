@@ -25,7 +25,7 @@ class DetailsViewModel @Inject constructor(
             repositoryDetailsUseCase(ownerName, repoName).catch {
                 Log.i("TAG DetailsViewModel", "exception: ${it.message}")
             }.collectLatest {
-                Log.i("TAG DetailsViewModel", "data: ")
+                Log.i("TAG DetailsViewModel", "data: $it")
             }
         }
     }
