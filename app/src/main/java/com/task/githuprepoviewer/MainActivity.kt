@@ -14,9 +14,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.task.githuprepoviewer.presentation.details.DetailsScreen
 import com.task.githuprepoviewer.presentation.home.HomeScreen
 import com.task.githuprepoviewer.presentation.home.HomeViewModel
@@ -58,12 +60,17 @@ class MainActivity : ComponentActivity() {
                 HomeScreen(
                     state = uiState.value,
                     fontFamily = fontFamily
-                ) { ownerName, repName ->
-                    Log.i(TAG, "clicked repo: $ownerName/$repName")
-                    navController.navigate("details")
+                ) { ownerName, repoName ->
+                    Log.i(TAG, "clicked repo: $ownerName/$repoName")
+                    navController.navigate("details/$ownerName/$repoName")
                 }
             }
-            composable(route = "details") {
+            composable(route = "details/{owner}/{repo}",
+                arguments = listOf(
+                    navArgument("owner") { type = NavType.StringType },
+                    navArgument("repo") { type = NavType.StringType }
+                )
+            ) {
                 DetailsScreen()
             }
         }
