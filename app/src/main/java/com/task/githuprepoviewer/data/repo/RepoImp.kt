@@ -30,4 +30,10 @@ class RepoImp @Inject constructor(
                 localSource.updateLocalRepositoryList(repositoryResponse.convertToLocalRepositoryItemsList())
             }
     }
+
+    override fun getFullRepositoryDetails(
+        ownerName: String,
+        repoName: String
+    ) = remoteSource.getFullRepositoryDetails(ownerName, repoName)
+
 }

@@ -1,5 +1,7 @@
 package com.task.githuprepoviewer.data.remote
 
+import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -8,7 +10,12 @@ import javax.inject.Singleton
 class RemoteSourceImp @Inject constructor(
     private val service: GitHubService
 ) : RemoteSource {
-    override suspend fun getRepositoryList() = flow {
+
+    override fun getRepositoryList() = flow {
         emit(service.getRepositoryList())
+    }
+
+    override fun getFullRepositoryDetails(ownerName: String, repoName: String) = flow {
+        emit(service.getFullRepositoryDetails(ownerName, repoName))
     }
 }
