@@ -1,6 +1,7 @@
 package com.task.githuprepoviewer
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.task.githuprepoviewer.presentation.details.DetailsScreen
 import com.task.githuprepoviewer.presentation.home.HomeScreen
 import com.task.githuprepoviewer.presentation.home.HomeViewModel
 import com.task.githuprepoviewer.ui.theme.GithupRepoViewerTheme
@@ -53,7 +55,16 @@ class MainActivity : ComponentActivity() {
             composable(route = "home") {
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val uiState = homeViewModel.repositoryListState.collectAsStateWithLifecycle()
-                HomeScreen(state = uiState.value, fontFamily = fontFamily)
+                HomeScreen(
+                    state = uiState.value,
+                    fontFamily = fontFamily
+                ) { ownerName, repName ->
+                    Log.i(TAG, "clicked repo: $ownerName/$repName")
+                    navController.navigate("details")
+                }
+            }
+            composable(route = "details") {
+                DetailsScreen()
             }
         }
     }

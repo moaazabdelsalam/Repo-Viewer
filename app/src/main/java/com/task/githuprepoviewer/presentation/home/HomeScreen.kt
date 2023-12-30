@@ -43,7 +43,8 @@ import com.task.githuprepoviewer.presentation.RepositoryItem
 @Composable
 fun HomeScreen(
     state: ApiState<List<RepositoryItem>>,
-    fontFamily: FontFamily
+    fontFamily: FontFamily,
+    onItemClick: (String, String) -> Unit
 ) {
     val TAG = "TAG HomeScreen"
 
@@ -64,9 +65,7 @@ fun HomeScreen(
                     ) {
                         RepoItem(
                             repositoryItem = it,
-                            onItemClick = { ownerName, repName ->
-                                Log.i(TAG, "clicked repo: $ownerName/$repName")
-                            },
+                            onItemClick = onItemClick,
                             modifier = Modifier.fillMaxWidth(),
                             fontFamily
                         )
