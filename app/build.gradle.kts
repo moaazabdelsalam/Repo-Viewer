@@ -93,6 +93,12 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    // LifeCycle with compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+
+    // Glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 }
 
 kapt {
