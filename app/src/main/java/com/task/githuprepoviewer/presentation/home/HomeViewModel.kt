@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val _repositoryListState: MutableStateFlow<ApiState<List<RepositoryItem>>> =
         MutableStateFlow(ApiState.Loading)
     val repositoryListState: StateFlow<ApiState<List<RepositoryItem>>>
-        get() = _repositoryListState
+        get() = _repositoryListState.asStateFlow()
 
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         Log.i(TAG, "exception: ${throwable.message.toString()}")

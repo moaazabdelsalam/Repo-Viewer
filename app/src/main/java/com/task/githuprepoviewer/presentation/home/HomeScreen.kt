@@ -27,6 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -37,7 +41,10 @@ import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.RepositoryItem
 
 @Composable
-fun HomeScreen(state: ApiState<List<RepositoryItem>>) {
+fun HomeScreen(
+    state: ApiState<List<RepositoryItem>>,
+    fontFamily: FontFamily
+) {
     val TAG = "TAG HomeScreen"
 
     Box(
@@ -51,13 +58,17 @@ fun HomeScreen(state: ApiState<List<RepositoryItem>>) {
             ApiState.Loading -> CircularProgressIndicator()
             is ApiState.Success -> {
                 LazyColumn() {
-                    items(state.data) {
+                    items(
+                        state.data,
+                        key = { it.ownerName + it.repoName }
+                    ) {
                         RepoItem(
                             repositoryItem = it,
                             onItemClick = { ownerName, repName ->
                                 Log.i(TAG, "clicked repo: $ownerName/$repName")
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            fontFamily
                         )
                     }
                 }
@@ -70,7 +81,8 @@ fun HomeScreen(state: ApiState<List<RepositoryItem>>) {
 fun RepoItem(
     repositoryItem: RepositoryItem,
     onItemClick: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontFamily: FontFamily
 ) {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -84,26 +96,52 @@ fun RepoItem(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularAvatarImage(
                     avatarUrl = repositoryItem.ownerAvatarUrl,
-                    modifier = Modifier.size(25.dp)
+                    modifier = Modifier.size(25.dp).padding(end = 4.dp)
                 )
                 Text(
                     text = repositoryItem.ownerName,
                     modifier = Modifier.padding(horizontal = 4.dp),
-                    fontSize = 16.sp
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Light
+                    )
                 )
-                Text(text = "/", color = Color.Gray)
+                Text(
+                    text = "/",
+                    color = Color.Gray,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontStyle = FontStyle.Italic
+                    )
+                )
                 Text(
                     text = repositoryItem.repoName,
                     modifier = Modifier.padding(horizontal = 4.dp),
-                    maxLines = 1
+                    maxLines = 1,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
             }
             Text(
                 text = repositoryItem.repoDescription ?: "",
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp),
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Medium
+                )
             )
             Row() {
-                StargazersCount(repositoryItem.starsCount.toString())
+                StargazersCount(
+                    stargazersNumber = repositoryItem.starsCount.toString(),
+                    fontFamily = fontFamily
+                )
             }
         }
     }
@@ -132,7 +170,8 @@ fun CircularAvatarImage(
 @Composable
 fun StargazersCount(
     stargazersNumber: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontFamily: FontFamily
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
@@ -144,7 +183,13 @@ fun StargazersCount(
                 Color(0xFFFFD700)
             )
         )
-        Text(text = stargazersNumber)
+        Text(
+            text = stargazersNumber,
+            style = TextStyle(
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.SemiBold
+            )
+        )
     }
 }
 
