@@ -8,9 +8,12 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.task.githuprepoviewer.data.remote.ApiState
+import com.task.githuprepoviewer.presentation.home.HomeScreen
 import com.task.githuprepoviewer.presentation.home.HomeViewModel
 import com.task.githuprepoviewer.ui.theme.GithupRepoViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,20 +35,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
+                    GitHupRepoViewerApp()
                 }
             }
         }
+    }
 
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            homeViewModel.repositoryListState.collectLatest {state ->
-                when(state){
-                    is ApiState.Failure -> Log.i(TAG, "failure: ${state.error}")
-                    is ApiState.Loading -> Log.i(TAG, "loading")
-                    is ApiState.Success -> Log.i(TAG, "success: ${state.data}")
-                }
-            }
-        }
+    @Composable
+    private fun GitHupRepoViewerApp() {
+        val uiState = homeViewModel.repositoryListState.collectAsStateWithLifecycle()
+        HomeScreen(state = uiState.value)
     }
 }
