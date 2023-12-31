@@ -1,9 +1,376 @@
 package com.task.githuprepoviewer.presentation.details
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.task.githuprepoviewer.R
+import com.task.githuprepoviewer.presentation.CircularAvatarImage
+import com.task.githuprepoviewer.presentation.LabeledIcon
+import com.task.githuprepoviewer.presentation.fontFamily
 
 @Composable
 fun DetailsScreen() {
-    val detailsViewModel: DetailsViewModel = hiltViewModel()
+    //val detailsViewModel: DetailsViewModel = hiltViewModel()
+    RepoDetails(
+        repoDetails = RepositoryDetails(
+            ownerName = "vanpelt",
+            ownerAvatarUrl = "https://avatars.githubusercontent.com/u/17?v=4",
+            ownerType = "User",
+            repoName = "jsawesome",
+            repoDescription = "Awesome JSON",
+            isPrivate = false, stargazersCount = 71,
+            watchersCount = 71,
+            forksCount = 11,
+            language = "JavaScript",
+            topics = listOf(
+                "programming-languages",
+                "rubinius",
+                "virtual-machine"
+            ),
+            openIssuesCount = 1,
+            createdAt = "2008-01-13T06:04:19Z",
+            updatedAt = "2023-10-25T05:52:54Z"
+        ),
+        fontFamily = fontFamily
+    )
 }
+
+@Composable
+fun RepoDetails(repoDetails: RepositoryDetails, fontFamily: FontFamily) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        OwnerData(
+            repoDetails.ownerName,
+            repoDetails.ownerType,
+            repoDetails.ownerAvatarUrl,
+            fontFamily
+        )
+        HorizontalLine()
+        RepoMainData(
+            repoName = repoDetails.repoName,
+            isPrivate = repoDetails.isPrivate,
+            description = repoDetails.repoDescription ?: "",
+            starsCount = repoDetails.stargazersCount,
+            watchersCount = repoDetails.watchersCount,
+            forksCount = repoDetails.forksCount,
+            language = repoDetails.language,
+            fontFamily = fontFamily
+        )
+        RepoTopics(repoDetails.topics, fontFamily, Modifier.padding(top = 16.dp))
+        RepoIssues(repoDetails.openIssuesCount)
+    }
+}
+
+@Composable
+fun OwnerData(
+    ownerName: String,
+    ownerType: String,
+    ownerAvatarUrl: String,
+    fontFamily: FontFamily
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        CircularAvatarImage(
+            avatarUrl = ownerAvatarUrl,
+            modifier = Modifier
+                .height(50.dp)
+                .width(70.dp)
+                .padding(end = 16.dp)
+        )
+        Column() {
+            Text(
+                text = ownerName,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Medium
+                )
+            )
+            Text(
+                text = ownerType,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Thin
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun RepoMainData(
+    repoName: String,
+    isPrivate: Boolean,
+    description: String,
+    starsCount: Int,
+    watchersCount: Int,
+    forksCount: Int,
+    language: String,
+    fontFamily: FontFamily
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = repoName,
+                style = TextStyle(
+                    fontSize = 22.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+
+        }
+        LabeledIcon(
+            painter = painterResource(id = if (isPrivate) R.drawable.ic_private else R.drawable.ic_public),
+            label = if (isPrivate) "Private" else "Public",
+            contentDescription = "Visibility Icon",
+            colorFilter = ColorFilter.tint(Color.Gray),
+            modifier = Modifier
+                .padding(end = 4.dp)
+                .size(18.dp),
+            textStyle = TextStyle(
+                fontSize = 14.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Thin
+            )
+        )
+        Text(
+            text = description,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Medium
+            )
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            LabeledCounterItem(
+                painter = painterResource(id = R.drawable.ic_star),
+                number = starsCount.toString(),
+                label = "Stars",
+                contentDescription = "Star Icon",
+                colorFilter = ColorFilter.tint(Color.Gray),
+                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+            )
+            LabeledCounterItem(
+                painter = painterResource(id = R.drawable.ic_fork),
+                number = forksCount.toString(),
+                label = "Forks",
+                contentDescription = "Fork Icon",
+                colorFilter = ColorFilter.tint(Color.Gray),
+                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+            )
+        }
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .fillMaxWidth()
+        ) {
+            LabeledCounterItem(
+                painter = painterResource(id = R.drawable.ic_watcher),
+                number = watchersCount.toString(),
+                label = "Watchers",
+                contentDescription = "Watcher Icon",
+                colorFilter = ColorFilter.tint(Color.Gray),
+                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+            )
+            LabeledCounterItem(
+                painter = painterResource(id = R.drawable.ic_code),
+                number = "",
+                label = language,
+                contentDescription = "Language Icon",
+                colorFilter = ColorFilter.tint(Color.Gray),
+                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun LabeledCounterItem(
+    painter: Painter,
+    number: String,
+    label: String,
+    contentDescription: String,
+    modifier: Modifier = Modifier,
+    colorFilter: ColorFilter,
+    textStyle: TextStyle = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.SemiBold
+    )
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        LabeledIcon(
+            painter = painter,
+            label = number,
+            contentDescription = contentDescription,
+            colorFilter = colorFilter,
+            modifier = modifier,
+            textStyle = textStyle
+        )
+        Text(
+            text = label,
+            style = textStyle,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun RepoTopics(
+    topics: List<String>,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier
+) {
+    if (topics.isNotEmpty()) {
+        Column(modifier = modifier.fillMaxWidth()) {
+            Text(
+                text = "Topics",
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+            LazyRow() {
+                items(topics) {
+                    RoundedCornerText(
+                        text = it,
+                        textStyle = TextStyle(
+                            fontSize = 18.sp,
+                            fontFamily = fontFamily,
+                            fontWeight = FontWeight.Thin
+                        ),
+                        backgroundColor = Color.LightGray
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun RoundedCornerText(
+    text: String,
+    textStyle: TextStyle,
+    backgroundColor: Color
+) {
+    Box(
+        Modifier
+            .padding(6.dp)
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            style = textStyle,
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 10.dp)
+        )
+    }
+}
+
+@Composable
+fun RepoIssues(
+    issuesCount: Int
+) {
+    Box(
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(
+            enabled = issuesCount > 0,
+            onClick = { }) {
+            Text(
+                text =
+                if (issuesCount > 0)
+                    "See $issuesCount issues"
+                else
+                    "No Issues"
+            )
+        }
+    }
+}
+
+@Composable
+fun HorizontalLine() {
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .fillMaxWidth()
+            .height(2.dp)
+            .background(Color.LightGray)
+    )
+}
+
+/*
+@Preview
+@Composable
+fun PreviewRepDetails() {
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        RepoDetails(
+            repoDetails = RepositoryDetails(
+                ownerName = "vanpelt",
+                ownerAvatarUrl = "https://avatars.githubusercontent.com/u/17?v=4",
+                ownerType = "User",
+                repoName = "jsawesome",
+                repoDescription = "Awesome JSON",
+                isPrivate = false, stargazersCount = 71,
+                watchersCount = 71,
+                forksCount = 11,
+                language = "JavaScript",
+                topics = listOf(
+                    "programming-languages",
+                    "rubinius",
+                    "virtual-machine"
+                ),
+                openIssuesCount = 1,
+                createdAt = "2008-01-13T06:04:19Z",
+                updatedAt = "2023-10-25T05:52:54Z"
+            ),
+            fontFamily = fontFamily
+        )
+    }
+}*/
