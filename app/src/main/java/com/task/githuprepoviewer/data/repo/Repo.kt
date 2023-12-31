@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.data.repo
 
-import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
 import com.task.githuprepoviewer.presentation.details.RepositoryDetails
 import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
 import kotlinx.coroutines.flow.Flow

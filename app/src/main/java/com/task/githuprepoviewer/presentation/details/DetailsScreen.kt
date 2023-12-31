@@ -1,5 +1,6 @@
 package com.task.githuprepoviewer.presentation.details
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,36 +33,37 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.task.githuprepoviewer.R
+import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
 import com.task.githuprepoviewer.presentation.LabeledIcon
 import com.task.githuprepoviewer.presentation.fontFamily
 
 @Composable
 fun DetailsScreen() {
-    //val detailsViewModel: DetailsViewModel = hiltViewModel()
-    RepoDetails(
-        repoDetails = RepositoryDetails(
-            ownerName = "vanpelt",
-            ownerAvatarUrl = "https://avatars.githubusercontent.com/u/17?v=4",
-            ownerType = "User",
-            repoName = "jsawesome",
-            repoDescription = "Awesome JSON",
-            isPrivate = false, stargazersCount = 71,
-            watchersCount = 71,
-            forksCount = 11,
-            language = "JavaScript",
-            topics = listOf(
-                "programming-languages",
-                "rubinius",
-                "virtual-machine"
-            ),
-            openIssuesCount = 1,
-            createdAt = "2008-01-13T06:04:19Z",
-            updatedAt = "2023-10-25T05:52:54Z"
-        ),
-        fontFamily = fontFamily
-    )
+    val detailsViewModel: DetailsViewModel = hiltViewModel()
+    val state = detailsViewModel.repositoryDetailsState.collectAsStateWithLifecycle()
+    val uiState = state.value
+    when (uiState) {
+        is ApiState.Failure -> Log.i("TAG DetailsScreen", "failure: ${uiState.error}")
+        ApiState.Loading -> LoadingState()
+        is ApiState.Success -> {
+            RepoDetails(
+                repoDetails = uiState.data,
+                fontFamily = fontFamily
+            )
+        }
+    }
+
+}
+
+@Composable
+fun LoadingState() {
+    Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator()
+    }
 }
 
 @Composable
@@ -185,7 +188,9 @@ fun RepoMainData(
                 label = "Stars",
                 contentDescription = "Star Icon",
                 colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(25.dp)
             )
             LabeledCounterItem(
                 painter = painterResource(id = R.drawable.ic_fork),
@@ -193,7 +198,9 @@ fun RepoMainData(
                 label = "Forks",
                 contentDescription = "Fork Icon",
                 colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(25.dp)
             )
         }
         Row(
@@ -208,7 +215,9 @@ fun RepoMainData(
                 label = "Watchers",
                 contentDescription = "Watcher Icon",
                 colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(25.dp)
             )
             LabeledCounterItem(
                 painter = painterResource(id = R.drawable.ic_code),
@@ -216,7 +225,9 @@ fun RepoMainData(
                 label = language,
                 contentDescription = "Language Icon",
                 colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier.padding(end = 8.dp).size(25.dp)
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(25.dp)
             )
         }
     }
