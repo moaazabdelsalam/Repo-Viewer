@@ -9,6 +9,7 @@ import com.task.githuprepoviewer.domain.usecase.UpdateLocalListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +28,7 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(ApiState.Loading)
     val repositoryListState: StateFlow<ApiState<List<HomeRepositoryItem>>>
         get() = _repositoryListState.asStateFlow()
+    private var stopIndex = 10
 
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         Log.i(TAG, "exception: ${throwable.message.toString()}")
@@ -37,7 +39,17 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO + errorHandler) {
             updateLocalListUseCase()
-            repositoryListUseCase().collectLatest {
+            repositoryListUseCase(stopIndex).collectLatest {
+                _repositoryListState.value = ApiState.Success(it)
+            }
+        }
+    }
+
+    fun loadMoreRepos() {
+        stopIndex += 5
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            delay(500L)
+            repositoryListUseCase(stopIndex).collectLatest {
                 _repositoryListState.value = ApiState.Success(it)
             }
         }

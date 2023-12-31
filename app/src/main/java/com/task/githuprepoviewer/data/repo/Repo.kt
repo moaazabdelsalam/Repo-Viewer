@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repo {
     suspend fun updateLocalRepositoryList()
-    fun getRepositoryList(): Flow<List<HomeRepositoryItem>>
+    fun getRepositoryList(stopIndex: Int): Flow<List<HomeRepositoryItem>>
     fun getFullRepositoryDetails(ownerName: String, repoName: String): Flow<RepositoryDetails>
 }

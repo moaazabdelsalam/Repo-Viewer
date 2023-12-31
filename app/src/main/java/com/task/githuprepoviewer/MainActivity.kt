@@ -51,7 +51,8 @@ class MainActivity : ComponentActivity() {
                 val uiState = homeViewModel.repositoryListState.collectAsStateWithLifecycle()
                 HomeScreen(
                     state = uiState.value,
-                    fontFamily = fontFamily
+                    fontFamily = fontFamily,
+                    loadMore = { homeViewModel.loadMoreRepos() }
                 ) { ownerName, repoName ->
                     Log.i(TAG, "clicked repo: $ownerName/$repoName")
                     navController.navigate("details/$ownerName/$repoName")
