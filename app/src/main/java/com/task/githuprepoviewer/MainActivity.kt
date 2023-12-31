@@ -1,7 +1,6 @@
 package com.task.githuprepoviewer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +19,7 @@ import com.task.githuprepoviewer.presentation.details.DetailsScreen
 import com.task.githuprepoviewer.presentation.fontFamily
 import com.task.githuprepoviewer.presentation.home.HomeScreen
 import com.task.githuprepoviewer.presentation.home.HomeViewModel
+import com.task.githuprepoviewer.presentation.issues.IssuesScreen
 import com.task.githuprepoviewer.ui.theme.GithupRepoViewerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     fontFamily = fontFamily,
                     loadMore = { homeViewModel.loadMoreRepos() }
                 ) { ownerName, repoName ->
-                    Log.i(TAG, "clicked repo: $ownerName/$repoName")
                     navController.navigate("details/$ownerName/$repoName")
                 }
             }
@@ -64,7 +63,17 @@ class MainActivity : ComponentActivity() {
                     navArgument("repo") { type = NavType.StringType }
                 )
             ) {
-                DetailsScreen()
+                DetailsScreen { ownerName, repoName ->
+                    navController.navigate("issues/$ownerName/$repoName")
+                }
+            }
+            composable(route = "issues/{owner}/{repo}",
+                arguments = listOf(
+                    navArgument("owner") { type = NavType.StringType },
+                    navArgument("repo") { type = NavType.StringType }
+                )
+            ) {
+                IssuesScreen()
             }
         }
     }

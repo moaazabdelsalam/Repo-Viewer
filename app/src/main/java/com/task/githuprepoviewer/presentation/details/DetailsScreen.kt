@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -42,7 +41,9 @@ import com.task.githuprepoviewer.presentation.LabeledIcon
 import com.task.githuprepoviewer.presentation.fontFamily
 
 @Composable
-fun DetailsScreen() {
+fun DetailsScreen(
+    onShowIssuesClick: (String, String) -> Unit
+) {
     val detailsViewModel: DetailsViewModel = hiltViewModel()
     val state = detailsViewModel.repositoryDetailsState.collectAsStateWithLifecycle()
     val uiState = state.value
@@ -52,22 +53,28 @@ fun DetailsScreen() {
         is ApiState.Success -> {
             RepoDetails(
                 repoDetails = uiState.data,
-                fontFamily = fontFamily
+                fontFamily = fontFamily,
+                onShowIssuesClick = {
+                    onShowIssuesClick(uiState.data.ownerName, uiState.data.repoName)
+                }
             )
         }
     }
-
 }
 
 @Composable
 fun LoadingState() {
-    Box (contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-fun RepoDetails(repoDetails: RepositoryDetails, fontFamily: FontFamily) {
+fun RepoDetails(
+    repoDetails: RepositoryDetails,
+    fontFamily: FontFamily,
+    onShowIssuesClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -94,7 +101,7 @@ fun RepoDetails(repoDetails: RepositoryDetails, fontFamily: FontFamily) {
             fontFamily = fontFamily
         )
         RepoTopics(repoDetails.topics, fontFamily, Modifier.padding(top = 16.dp))
-        RepoIssues(repoDetails.openIssuesCount)
+        RepoIssues(repoDetails.openIssuesCount, onShowIssuesClick)
     }
 }
 
@@ -362,7 +369,8 @@ fun RoundedCornerText(
 
 @Composable
 fun RepoIssues(
-    issuesCount: Int
+    issuesCount: Int,
+    onShowIssuesClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -372,7 +380,7 @@ fun RepoIssues(
     ) {
         Button(
             enabled = issuesCount > 0,
-            onClick = { }) {
+            onClick = { onShowIssuesClick() }) {
             Text(
                 text =
                 if (issuesCount > 0)

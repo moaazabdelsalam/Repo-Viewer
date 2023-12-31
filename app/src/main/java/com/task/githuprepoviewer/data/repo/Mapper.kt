@@ -2,8 +2,10 @@ package com.task.githuprepoviewer.data.repo
 
 import com.task.githuprepoviewer.data.local.db.LocalRepositoryItem
 import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
+import com.task.githuprepoviewer.data.remote.model.RepositoryIssuesResponse
 import com.task.githuprepoviewer.presentation.details.RepositoryDetails
 import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
+import com.task.githuprepoviewer.presentation.issues.RepositoryIssuesItem
 
 /*fun RepositoryResponse.convertToRepositoryItem(): RepositoryItem =
     RepositoryItem(
@@ -51,3 +53,15 @@ fun RepositoryDetailsResponse.convertToRepositoryResponse(): RepositoryDetails =
         createdAt = createdAt,
         updatedAt = updatedAt
     )
+
+fun List<RepositoryIssuesResponse>.convertToRepositoryIssuesList(): List<RepositoryIssuesItem> =
+    map {
+        RepositoryIssuesItem(
+            author = it.user.login,
+            authorAvatarUrl = it.user.avatarUrl,
+            issueTitle = it.title,
+            description = it.body,
+            date = it.createdAt,
+            state = it.state
+        )
+    }

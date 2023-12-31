@@ -18,11 +18,12 @@ class RepoImp @Inject constructor(
     private val localSource: LocalSource
 ) : Repo {
     private val TAG = "TAG RepoImp"
+
     override fun getRepositoryList(stopIndex: Int): Flow<List<HomeRepositoryItem>> {
         return flow {
             val localList = localSource.getLocalRepositoryList()
             emit(
-                    localList
+                localList
                     .subList(0, if (localList.size > stopIndex) stopIndex else localList.size)
                     .convertToRepositoryItemsList()
             )
@@ -48,4 +49,10 @@ class RepoImp @Inject constructor(
         it.convertToRepositoryResponse()
     }
 
+    override fun getRepositoryIssues(
+        ownerName: String,
+        repoName: String
+    ) = remoteSource.getRepositoryIssues(ownerName, repoName).map {
+        it.convertToRepositoryIssuesList()
+    }
 }
