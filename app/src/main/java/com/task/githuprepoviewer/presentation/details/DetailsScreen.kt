@@ -107,9 +107,8 @@ fun OwnerData(
         CircularAvatarImage(
             avatarUrl = ownerAvatarUrl,
             modifier = Modifier
-                .height(50.dp)
-                .width(70.dp)
                 .padding(end = 16.dp)
+                .size(50.dp)
         )
         Column() {
             Text(
@@ -178,58 +177,73 @@ fun RepoMainData(
                 fontWeight = FontWeight.Medium
             )
         )
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            LabeledCounterItem(
-                painter = painterResource(id = R.drawable.ic_star),
-                number = starsCount.toString(),
-                label = "Stars",
-                contentDescription = "Star Icon",
-                colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(25.dp)
-            )
-            LabeledCounterItem(
-                painter = painterResource(id = R.drawable.ic_fork),
-                number = forksCount.toString(),
-                label = "Forks",
-                contentDescription = "Fork Icon",
-                colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(25.dp)
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+        RepoProperties(
+            starsCount = starsCount,
+            watchersCount = watchersCount,
+            forksCount = forksCount,
+            language = language
+        )
+    }
+}
+
+@Composable
+fun RepoProperties(
+    starsCount: Int,
+    watchersCount: Int,
+    forksCount: Int,
+    language: String,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        LabeledCounterItem(
+            painter = painterResource(id = R.drawable.ic_star),
+            number = starsCount.toString(),
+            label = "Stars",
+            contentDescription = "Star Icon",
+            colorFilter = ColorFilter.tint(Color.Gray),
             modifier = Modifier
-                .padding(vertical = 8.dp)
-                .fillMaxWidth()
-        ) {
-            LabeledCounterItem(
-                painter = painterResource(id = R.drawable.ic_watcher),
-                number = watchersCount.toString(),
-                label = "Watchers",
-                contentDescription = "Watcher Icon",
-                colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(25.dp)
-            )
-            LabeledCounterItem(
-                painter = painterResource(id = R.drawable.ic_code),
-                number = "",
-                label = language,
-                contentDescription = "Language Icon",
-                colorFilter = ColorFilter.tint(Color.Gray),
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(25.dp)
-            )
-        }
+                .padding(end = 8.dp)
+                .size(25.dp)
+        )
+        LabeledCounterItem(
+            painter = painterResource(id = R.drawable.ic_fork),
+            number = forksCount.toString(),
+            label = "Forks",
+            contentDescription = "Fork Icon",
+            colorFilter = ColorFilter.tint(Color.Gray),
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(25.dp)
+        )
+    }
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth()
+    ) {
+        LabeledCounterItem(
+            painter = painterResource(id = R.drawable.ic_watcher),
+            number = watchersCount.toString(),
+            label = "Watchers",
+            contentDescription = "Watcher Icon",
+            colorFilter = ColorFilter.tint(Color.Gray),
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(25.dp)
+        )
+        LabeledCounterItem(
+            painter = painterResource(id = R.drawable.ic_code),
+            number = "",
+            label = language,
+            contentDescription = "Language Icon",
+            colorFilter = ColorFilter.tint(Color.Gray),
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(25.dp)
+        )
     }
 }
 
@@ -347,7 +361,7 @@ fun RepoIssues(
 fun HorizontalLine() {
     Box(
         modifier = Modifier
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(vertical = 16.dp)
             .fillMaxWidth()
             .height(2.dp)
             .background(Color.LightGray)

@@ -37,17 +37,14 @@ fun CircularAvatarImage(
     avatarUrl: String,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize().clip(CircleShape), contentAlignment = Alignment.Center) {
         GlideImage(
             model = avatarUrl,
             contentDescription = "Owner Avatar Image",
             loading = placeholder(R.drawable.jetpack_compose_icon),
             failure = placeholder(ColorPainter(Color.Red)),
             alignment = Alignment.Center,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(CircleShape)
-                .fillMaxSize()
+            contentScale = ContentScale.Crop
         )
     }
 }

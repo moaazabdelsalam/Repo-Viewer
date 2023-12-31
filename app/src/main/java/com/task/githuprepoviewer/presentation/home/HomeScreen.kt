@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -88,8 +90,8 @@ fun RepoItem(
                 CircularAvatarImage(
                     avatarUrl = homeRepositoryItem.ownerAvatarUrl,
                     modifier = Modifier
-                        .size(25.dp)
                         .padding(end = 4.dp)
+                        .size(25.dp)
                 )
                 Text(
                     text = homeRepositoryItem.ownerName,
@@ -130,7 +132,7 @@ fun RepoItem(
                     fontWeight = FontWeight.Medium
                 )
             )
-            Row() {
+            /*Row() {
                 LabeledIcon(
                     painter = painterResource(id = R.drawable.ic_star),
                     label = homeRepositoryItem.starsCount.toString(),
@@ -142,7 +144,7 @@ fun RepoItem(
                         fontWeight = FontWeight.SemiBold
                     )
                 )
-            }
+            }*/
         }
     }
 }
