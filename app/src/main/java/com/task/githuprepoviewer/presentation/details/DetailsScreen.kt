@@ -84,11 +84,13 @@ fun RepoDetails(repoDetails: RepositoryDetails, fontFamily: FontFamily) {
         RepoMainData(
             repoName = repoDetails.repoName,
             isPrivate = repoDetails.isPrivate,
-            description = repoDetails.repoDescription ?: "",
+            description = repoDetails.repoDescription ?: "-This Repository has no description!-",
             starsCount = repoDetails.stargazersCount,
             watchersCount = repoDetails.watchersCount,
             forksCount = repoDetails.forksCount,
             language = repoDetails.language,
+            createdAt = repoDetails.createdAt.split("T")[0],
+            updatedAt = repoDetails.updatedAt.split("T")[0],
             fontFamily = fontFamily
         )
         RepoTopics(repoDetails.topics, fontFamily, Modifier.padding(top = 16.dp))
@@ -140,10 +142,16 @@ fun RepoMainData(
     watchersCount: Int,
     forksCount: Int,
     language: String,
+    createdAt: String,
+    updatedAt: String,
     fontFamily: FontFamily
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = repoName,
                 style = TextStyle(
@@ -152,22 +160,41 @@ fun RepoMainData(
                     fontWeight = FontWeight.Bold
                 )
             )
-
-        }
-        LabeledIcon(
-            painter = painterResource(id = if (isPrivate) R.drawable.ic_private else R.drawable.ic_public),
-            label = if (isPrivate) "Private" else "Public",
-            contentDescription = "Visibility Icon",
-            colorFilter = ColorFilter.tint(Color.Gray),
-            modifier = Modifier
-                .padding(end = 4.dp)
-                .size(18.dp),
-            textStyle = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Thin
+            Text(
+                text = "Created: $createdAt",
+                style = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.SemiBold
+                )
             )
-        )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            LabeledIcon(
+                painter = painterResource(id = if (isPrivate) R.drawable.ic_private else R.drawable.ic_public),
+                label = if (isPrivate) "Private" else "Public",
+                contentDescription = "Visibility Icon",
+                colorFilter = ColorFilter.tint(Color.Gray),
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .size(18.dp),
+                textStyle = TextStyle(
+                    fontSize = 14.sp,
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.Thin
+                )
+            )
+            Text(
+                text = "Updated: $updatedAt",
+                style = TextStyle(
+                    fontFamily = fontFamily,
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }
         Text(
             text = description,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp),
