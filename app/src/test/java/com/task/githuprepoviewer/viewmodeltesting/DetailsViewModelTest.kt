@@ -1,4 +1,4 @@
-package com.task.githuprepoviewer
+package com.task.githuprepoviewer.viewmodeltesting
 
 import androidx.lifecycle.SavedStateHandle
 import com.task.githuprepoviewer.data.remote.ApiState

@@ -1,4 +1,4 @@
-package com.task.githuprepoviewer
+package com.task.githuprepoviewer.viewmodeltesting
 
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.data.repo.Repo
