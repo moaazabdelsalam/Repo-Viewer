@@ -3,12 +3,9 @@ package com.task.githuprepoviewer.viewmodeltesting
 import androidx.lifecycle.SavedStateHandle
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.data.repo.Repo
-import com.task.githuprepoviewer.data.repo.convertToRepositoryDetails
 import com.task.githuprepoviewer.data.repo.convertToRepositoryIssuesList
 import com.task.githuprepoviewer.datasorce.FakeData
-import com.task.githuprepoviewer.domain.usecase.RepositoryDetailsUseCase
 import com.task.githuprepoviewer.domain.usecase.RepositoryIssuesUseCase
-import com.task.githuprepoviewer.presentation.details.DetailsViewModel
 import com.task.githuprepoviewer.presentation.issues.IssuesViewModel
 import com.task.githuprepoviewer.repotesting.FakeRepo
 import kotlinx.coroutines.delay
