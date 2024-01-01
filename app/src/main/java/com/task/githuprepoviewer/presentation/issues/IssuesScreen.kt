@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
+import com.task.githuprepoviewer.presentation.ErrorState
 import com.task.githuprepoviewer.presentation.LoadingState
 import com.task.githuprepoviewer.presentation.fontFamily
 
@@ -35,7 +36,7 @@ fun IssuesScreen() {
     val state = issuesViewModel.repositoryIssuesState.collectAsStateWithLifecycle()
     val uiState = state.value
     when (uiState) {
-        is ApiState.Failure -> Log.i("TAG IssuesScreen", "failure: ${uiState.error}")
+        is ApiState.Failure -> ErrorState(message = uiState.error)
         ApiState.Loading -> LoadingState()
         is ApiState.Success -> {
             RepoIssuesList(list = uiState.data, fontFamily = fontFamily)

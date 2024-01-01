@@ -1,8 +1,10 @@
 package com.task.githuprepoviewer.presentation.details
 
+import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.task.githuprepoviewer.Constants
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.domain.usecase.RepositoryDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,7 +34,7 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _repositoryDetailsState.value = ApiState.Loading
             repositoryDetailsUseCase(ownerName, repoName).catch {
-                _repositoryDetailsState.value = ApiState.Failure("${it.message}")
+                _repositoryDetailsState.value = ApiState.Failure(Constants.ERROR_MSG)
             }.collectLatest {
                 _repositoryDetailsState.value = ApiState.Success(it)
             }

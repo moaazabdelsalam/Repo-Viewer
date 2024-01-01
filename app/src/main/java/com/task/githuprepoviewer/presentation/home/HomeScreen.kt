@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
+import com.task.githuprepoviewer.presentation.ErrorState
 import com.task.githuprepoviewer.presentation.LoadingState
 import com.task.githuprepoviewer.presentation.isReachedBottom
 
@@ -41,19 +41,16 @@ fun HomeScreen(
     loadMore: () -> Unit,
     onItemClick: (String, String) -> Unit
 ) {
-    val TAG = "TAG HomeScreen"
 
     when (state) {
-        is ApiState.Failure -> Log.i(TAG, "failure: ${state.error}")
+        is ApiState.Failure -> ErrorState(state.error)
         ApiState.Loading -> LoadingState()
-        is ApiState.Success -> {
-            HomeReposList(
-                list = state.data,
-                loadMore = loadMore,
-                onItemClick = onItemClick,
-                fontFamily = fontFamily
-            )
-        }
+        is ApiState.Success -> HomeReposList(
+            list = state.data,
+            loadMore = loadMore,
+            onItemClick = onItemClick,
+            fontFamily = fontFamily
+        )
     }
 
 }

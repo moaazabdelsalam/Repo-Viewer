@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.presentation.details
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,14 +13,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
@@ -36,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.task.githuprepoviewer.R
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
+import com.task.githuprepoviewer.presentation.ErrorState
 import com.task.githuprepoviewer.presentation.LabeledIcon
 import com.task.githuprepoviewer.presentation.LoadingState
 import com.task.githuprepoviewer.presentation.RoundedCornerText
@@ -49,17 +47,15 @@ fun DetailsScreen(
     val state = detailsViewModel.repositoryDetailsState.collectAsStateWithLifecycle()
     val uiState = state.value
     when (uiState) {
-        is ApiState.Failure -> Log.i("TAG DetailsScreen", "failure: ${uiState.error}")
+        is ApiState.Failure -> ErrorState(message = uiState.error)
         ApiState.Loading -> LoadingState()
-        is ApiState.Success -> {
-            RepoDetails(
-                repoDetails = uiState.data,
-                fontFamily = fontFamily,
-                onShowIssuesClick = {
-                    onShowIssuesClick(uiState.data.ownerName, uiState.data.repoName)
-                }
-            )
-        }
+        is ApiState.Success -> RepoDetails(
+            repoDetails = uiState.data,
+            fontFamily = fontFamily,
+            onShowIssuesClick = {
+                onShowIssuesClick(uiState.data.ownerName, uiState.data.repoName)
+            }
+        )
     }
 }
 
