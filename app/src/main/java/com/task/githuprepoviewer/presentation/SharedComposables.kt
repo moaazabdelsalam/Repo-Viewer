@@ -1,10 +1,15 @@
 package com.task.githuprepoviewer.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
@@ -37,7 +43,11 @@ fun CircularAvatarImage(
     avatarUrl: String,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize().clip(CircleShape), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .clip(CircleShape), contentAlignment = Alignment.Center
+    ) {
         GlideImage(
             model = avatarUrl,
             contentDescription = "Owner Avatar Image",
@@ -69,5 +79,49 @@ fun LabeledIcon(
             text = label,
             style = textStyle
         )
+    }
+}
+
+@Composable
+fun RoundedCornerText(
+    text: String,
+    textStyle: TextStyle,
+    backgroundColor: Color,
+    textColor: Color = Color.Unspecified
+) {
+    Box(
+        Modifier
+            .padding(6.dp)
+            .clip(shape = RoundedCornerShape(20.dp))
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = textColor,
+            style = textStyle,
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 10.dp)
+        )
+    }
+}
+
+@Composable
+fun LoadingState() {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator()
+    }
+}
+
+fun LazyListState.isReachedBottom(): Boolean {
+    val layoutInfo = layoutInfo
+    val visibleItemsInfo = layoutInfo.visibleItemsInfo
+    return if (layoutInfo.totalItemsCount == 0) {
+        false
+    } else {
+        val lastVisibleItem = visibleItemsInfo.last()
+        val viewportHeight = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
+        (lastVisibleItem.index + 1 == layoutInfo.totalItemsCount &&
+                lastVisibleItem.offset + lastVisibleItem.size <= viewportHeight)
     }
 }

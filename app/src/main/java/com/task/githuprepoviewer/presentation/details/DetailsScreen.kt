@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +37,8 @@ import com.task.githuprepoviewer.R
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
 import com.task.githuprepoviewer.presentation.LabeledIcon
+import com.task.githuprepoviewer.presentation.LoadingState
+import com.task.githuprepoviewer.presentation.RoundedCornerText
 import com.task.githuprepoviewer.presentation.fontFamily
 
 @Composable
@@ -59,13 +60,6 @@ fun DetailsScreen(
                 }
             )
         }
-    }
-}
-
-@Composable
-fun LoadingState() {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator()
     }
 }
 
@@ -342,28 +336,6 @@ fun RepoTopics(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun RoundedCornerText(
-    text: String,
-    textStyle: TextStyle,
-    backgroundColor: Color
-) {
-    Box(
-        Modifier
-            .padding(6.dp)
-            .clip(shape = RoundedCornerShape(20.dp))
-            .background(backgroundColor),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = textStyle,
-            modifier = Modifier
-                .padding(vertical = 8.dp, horizontal = 10.dp)
-        )
     }
 }
 

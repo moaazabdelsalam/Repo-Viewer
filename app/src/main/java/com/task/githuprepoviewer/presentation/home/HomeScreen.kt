@@ -7,16 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,18 +23,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.task.githuprepoviewer.R
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.presentation.CircularAvatarImage
-import com.task.githuprepoviewer.presentation.LabeledIcon
+import com.task.githuprepoviewer.presentation.LoadingState
+import com.task.githuprepoviewer.presentation.isReachedBottom
 
 @Composable
 fun HomeScreen(
@@ -48,25 +43,19 @@ fun HomeScreen(
 ) {
     val TAG = "TAG HomeScreen"
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp)
-    ) {
-        when (state) {
-            is ApiState.Failure -> Log.i(TAG, "failure: ${state.error}")
-            ApiState.Loading -> CircularProgressIndicator()
-            is ApiState.Success -> {
-                HomeReposList(
-                    list = state.data,
-                    loadMore = loadMore,
-                    onItemClick = onItemClick,
-                    fontFamily = fontFamily
-                )
-            }
+    when (state) {
+        is ApiState.Failure -> Log.i(TAG, "failure: ${state.error}")
+        ApiState.Loading -> LoadingState()
+        is ApiState.Success -> {
+            HomeReposList(
+                list = state.data,
+                loadMore = loadMore,
+                onItemClick = onItemClick,
+                fontFamily = fontFamily
+            )
         }
     }
+
 }
 
 @Composable
@@ -79,17 +68,7 @@ fun HomeReposList(
     val listState = rememberLazyListState()
     val reachedBottom: Boolean by remember {
         derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-            if (layoutInfo.totalItemsCount == 0) {
-                false
-            } else {
-                val lastVisibleItem = visibleItemsInfo.last()
-                val viewportHeight = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
-
-                (lastVisibleItem.index + 1 == layoutInfo.totalItemsCount &&
-                        lastVisibleItem.offset + lastVisibleItem.size <= viewportHeight)
-            }
+            listState.isReachedBottom()
         }
     }
 
@@ -98,18 +77,24 @@ fun HomeReposList(
             loadMore()
         }
     }
-
-    LazyColumn(state = listState) {
-        items(
-            list,
-            key = { it.ownerName + it.repoName }
-        ) {
-            RepoItem(
-                homeRepositoryItem = it,
-                onItemClick = onItemClick,
-                modifier = Modifier.fillMaxWidth(),
-                fontFamily
-            )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
+    ) {
+        LazyColumn(state = listState) {
+            items(
+                list,
+                key = { it.ownerName + it.repoName }
+            ) {
+                RepoItem(
+                    homeRepositoryItem = it,
+                    onItemClick = onItemClick,
+                    modifier = Modifier.fillMaxWidth(),
+                    fontFamily
+                )
+            }
         }
     }
 }
@@ -168,7 +153,8 @@ fun RepoItem(
                 )
             }
             Text(
-                text = homeRepositoryItem.repoDescription ?: "-This Repository has no description!-",
+                text = homeRepositoryItem.repoDescription
+                    ?: "-This Repository has no description!-",
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = TextStyle(
                     fontSize = 16.sp,
