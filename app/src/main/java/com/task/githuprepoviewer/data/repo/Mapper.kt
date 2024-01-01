@@ -7,13 +7,14 @@ import com.task.githuprepoviewer.presentation.details.RepositoryDetails
 import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
 import com.task.githuprepoviewer.presentation.issues.RepositoryIssuesItem
 
-/*fun RepositoryResponse.convertToRepositoryItem(): RepositoryItem =
-    RepositoryItem(
+fun RepositoryDetailsResponse.convertToRepositoryItem(): LocalRepositoryItem =
+    LocalRepositoryItem(
+        id = id,
         ownerName = owner.login,
         ownerAvatarUrl = owner.avatarUrl,
         repoName = name,
         repoDescription = description
-    )*/
+    )
 
 fun List<RepositoryDetailsResponse>.convertToLocalRepositoryItemsList(): List<LocalRepositoryItem> =
     map {
@@ -36,7 +37,7 @@ fun List<LocalRepositoryItem>.convertToRepositoryItemsList(): List<HomeRepositor
         )
     }
 
-fun RepositoryDetailsResponse.convertToRepositoryResponse(): RepositoryDetails =
+fun RepositoryDetailsResponse.convertToRepositoryDetails(): RepositoryDetails =
     RepositoryDetails(
         ownerName = owner.login,
         ownerAvatarUrl = owner.avatarUrl,

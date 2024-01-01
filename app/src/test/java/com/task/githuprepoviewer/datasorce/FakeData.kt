@@ -8,7 +8,6 @@ import com.task.githuprepoviewer.data.remote.model.Reactions
 import com.task.githuprepoviewer.data.remote.model.RepositoryDetailsResponse
 import com.task.githuprepoviewer.data.remote.model.RepositoryIssuesResponse
 import com.task.githuprepoviewer.data.remote.model.User
-import com.task.githuprepoviewer.data.repo.convertToRepositoryItem
 
 object FakeData {
     val fakeRepositoryDetailsResponse = RepositoryDetailsResponse(

@@ -46,7 +46,7 @@ class RepoImp @Inject constructor(
         ownerName: String,
         repoName: String
     ) = remoteSource.getFullRepositoryDetails(ownerName, repoName).map {
-        it.convertToRepositoryResponse()
+        it.convertToRepositoryDetails()
     }
 
     override fun getRepositoryIssues(
