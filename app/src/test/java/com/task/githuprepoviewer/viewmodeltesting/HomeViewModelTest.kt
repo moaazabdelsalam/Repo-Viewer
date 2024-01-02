@@ -5,6 +5,7 @@ import com.task.githuprepoviewer.data.repo.Repo
 import com.task.githuprepoviewer.data.repo.convertToRepositoryItemsList
 import com.task.githuprepoviewer.datasorce.FakeData
 import com.task.githuprepoviewer.domain.usecase.RepositoryListUseCase
+import com.task.githuprepoviewer.domain.usecase.RepositorySearchUseCase
 import com.task.githuprepoviewer.domain.usecase.UpdateLocalListUseCase
 import com.task.githuprepoviewer.presentation.home.HomeViewModel
 import com.task.githuprepoviewer.repotesting.FakeRepo
@@ -18,17 +19,20 @@ class HomeViewModelTest {
     private lateinit var repo: Repo
     private lateinit var updateLocalListUseCase: UpdateLocalListUseCase
     private lateinit var repositoryListUseCase: RepositoryListUseCase
+    private lateinit var repositorySearchUseCase: RepositorySearchUseCase
 
     @Before
     fun setup() {
         repo = FakeRepo()
         updateLocalListUseCase = UpdateLocalListUseCase(repo)
         repositoryListUseCase = RepositoryListUseCase(repo)
-        viewModel = HomeViewModel(updateLocalListUseCase, repositoryListUseCase)
+        repositorySearchUseCase = RepositorySearchUseCase(repo)
+        viewModel =
+            HomeViewModel(updateLocalListUseCase, repositoryListUseCase, repositorySearchUseCase)
     }
 
     @Test
-    fun getHomeRepositoryList_success() = runBlocking{
+    fun getHomeRepositoryList_success() = runBlocking {
         delay(1000L)
         val state = viewModel.repositoryListState.value
         assert(state is ApiState.Success)
