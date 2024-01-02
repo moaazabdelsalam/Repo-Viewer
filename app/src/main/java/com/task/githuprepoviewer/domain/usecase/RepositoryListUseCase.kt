@@ -3,7 +3,6 @@ package com.task.githuprepoviewer.domain.usecase
 import com.task.githuprepoviewer.data.repo.Repo
 import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RepositoryListUseCase @Inject constructor(

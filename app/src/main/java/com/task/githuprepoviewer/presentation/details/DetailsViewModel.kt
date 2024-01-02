@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.presentation.details
 
-import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

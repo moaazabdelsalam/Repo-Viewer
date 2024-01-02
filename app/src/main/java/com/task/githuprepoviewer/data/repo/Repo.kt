@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.data.repo
 
-import com.task.githuprepoviewer.data.remote.model.RepositoryIssuesResponse
 import com.task.githuprepoviewer.presentation.details.RepositoryDetails
 import com.task.githuprepoviewer.presentation.home.HomeRepositoryItem
 import com.task.githuprepoviewer.presentation.issues.RepositoryIssuesItem

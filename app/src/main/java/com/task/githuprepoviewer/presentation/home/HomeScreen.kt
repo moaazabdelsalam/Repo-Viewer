@@ -201,19 +201,6 @@ fun RepoItem(
                     fontWeight = FontWeight.Medium
                 )
             )
-            /*Row() {
-                LabeledIcon(
-                    painter = painterResource(id = R.drawable.ic_star),
-                    label = homeRepositoryItem.starsCount.toString(),
-                    contentDescription = "Star Icon",
-                    modifier = Modifier.size(25.dp),
-                    colorFilter = ColorFilter.tint(Color.Gray),
-                    textStyle = TextStyle(
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
-            }*/
         }
     }
 }
@@ -264,32 +251,3 @@ private fun RepoHeader(
         )
     }
 }
-
-/*
-@Preview
-@Composable
-fun PreviewRepoItem() {
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            RepoItem(
-                repositoryItem = RepositoryItem(
-                    ownerName = "mojombo",
-                    ownerAvatarUrl = "",
-                    repoName = "grit",
-                    repoDescription = "Grit is no longer maintained. Check out libgit2/rugged.** Grit gives you object oriented read/write access to Git repositories via Ruby.",
-                    starsCount = 10
-                ),
-                onItemClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
-    }
-
-}*/

@@ -370,35 +370,3 @@ fun HorizontalLine() {
             .background(Color.LightGray)
     )
 }
-
-/*
-@Preview
-@Composable
-fun PreviewRepDetails() {
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        RepoDetails(
-            repoDetails = RepositoryDetails(
-                ownerName = "vanpelt",
-                ownerAvatarUrl = "https://avatars.githubusercontent.com/u/17?v=4",
-                ownerType = "User",
-                repoName = "jsawesome",
-                repoDescription = "Awesome JSON",
-                isPrivate = false, stargazersCount = 71,
-                watchersCount = 71,
-                forksCount = 11,
-                language = "JavaScript",
-                topics = listOf(
-                    "programming-languages",
-                    "rubinius",
-                    "virtual-machine"
-                ),
-                openIssuesCount = 1,
-                createdAt = "2008-01-13T06:04:19Z",
-                updatedAt = "2023-10-25T05:52:54Z"
-            ),
-            fontFamily = fontFamily
-        )
-    }
-}*/
