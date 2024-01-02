@@ -52,7 +52,9 @@ class MainActivity : ComponentActivity() {
                 HomeScreen(
                     state = uiState.value,
                     fontFamily = fontFamily,
-                    loadMore = { homeViewModel.loadMoreRepos() }
+                    loadMore = { homeViewModel.loadMoreRepos() },
+                    onQueryChange = { homeViewModel.searchList(it) },
+                    filteredList = homeViewModel.filteredList.collectAsStateWithLifecycle().value
                 ) { ownerName, repoName ->
                     navController.navigate("details/$ownerName/$repoName")
                 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.task.githuprepoviewer.data.remote.ApiState
 import com.task.githuprepoviewer.domain.usecase.RepositoryListUseCase
+import com.task.githuprepoviewer.domain.usecase.RepositorySearchUseCase
 import com.task.githuprepoviewer.domain.usecase.UpdateLocalListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val updateLocalListUseCase: UpdateLocalListUseCase,
-    private val repositoryListUseCase: RepositoryListUseCase
+    private val repositoryListUseCase: RepositoryListUseCase,
+    private val repositorySearchUseCase: RepositorySearchUseCase
 ) : ViewModel() {
 
     private val TAG = "TAG HomeViewModel"
@@ -28,6 +30,10 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(ApiState.Loading)
     val repositoryListState: StateFlow<ApiState<List<HomeRepositoryItem>>>
         get() = _repositoryListState.asStateFlow()
+
+    private val _filteredList: MutableStateFlow<List<HomeRepositoryItem>> = MutableStateFlow(listOf())
+    val filteredList = _filteredList.asStateFlow()
+
     private var stopIndex = 10
 
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
@@ -51,6 +57,14 @@ class HomeViewModel @Inject constructor(
             delay(500L)
             repositoryListUseCase(stopIndex).collectLatest {
                 _repositoryListState.value = ApiState.Success(it)
+            }
+        }
+    }
+
+    fun searchList(searchText: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repositorySearchUseCase(searchText).collectLatest {
+                _filteredList.value = it
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.task.githuprepoviewer.presentation.home
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,9 +46,10 @@ fun HomeScreen(
     state: ApiState<List<HomeRepositoryItem>>,
     fontFamily: FontFamily,
     loadMore: () -> Unit,
+    onQueryChange: (String) -> Unit,
+    filteredList: List<HomeRepositoryItem>,
     onItemClick: (String, String) -> Unit
 ) {
-
     when (state) {
         is ApiState.Failure -> ErrorState(state.error)
         ApiState.Loading -> LoadingState()
@@ -57,10 +57,11 @@ fun HomeScreen(
             list = state.data,
             loadMore = loadMore,
             onItemClick = onItemClick,
-            fontFamily = fontFamily
+            fontFamily = fontFamily,
+            onQueryChange = onQueryChange,
+            filteredList = filteredList
         )
     }
-
 }
 
 @Composable
@@ -68,7 +69,9 @@ fun HomeReposList(
     list: List<HomeRepositoryItem>,
     loadMore: () -> Unit,
     onItemClick: (String, String) -> Unit,
-    fontFamily: FontFamily
+    fontFamily: FontFamily,
+    onQueryChange: (String) -> Unit,
+    filteredList: List<HomeRepositoryItem>
 ) {
     val listState = rememberLazyListState()
     val reachedBottom: Boolean by remember {
@@ -88,7 +91,7 @@ fun HomeReposList(
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        MySearchBar({Log.i("TAG HomeScreen", "search: $it")})
+        MySearchBar(onQueryChange, filteredList, onItemClick, fontFamily)
         LazyColumn(state = listState) {
             items(
                 list,
@@ -108,9 +111,14 @@ fun HomeReposList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MySearchBar(
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
+    filteredList: List<HomeRepositoryItem>,
+    onItemClick: (String, String) -> Unit,
+    fontFamily: FontFamily
 ) {
     var searchText by remember { mutableStateOf("") }
+    var isActive by remember { mutableStateOf(false) }
+
     SearchBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,10 +126,10 @@ fun MySearchBar(
         query = searchText,
         onQueryChange = {
             searchText = it
-            onQueryChange(searchText)
+            onQueryChange(searchText.trim())
         },
         onSearch = {},
-        active = false,
+        active = isActive,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Filled.Search,
@@ -129,10 +137,14 @@ fun MySearchBar(
             )
         },
         trailingIcon = {
-            if (searchText.isNotBlank()) {
+            if (isActive) {
                 Icon(
                     modifier = Modifier.clickable {
-                        searchText = ""
+                        if (searchText.isNotBlank()) {
+                            searchText = ""
+                        } else {
+                            isActive = false
+                        }
                     },
                     imageVector = Icons.Outlined.Close,
                     contentDescription = "Clear Icon"
@@ -140,9 +152,23 @@ fun MySearchBar(
             }
         },
         placeholder = { Text(text = "Search with Repo Name or Owner") },
-        onActiveChange = {}
+        onActiveChange = { isActive = it }
     ) {
-
+        if (searchText.isNotBlank()) {
+            LazyColumn() {
+                items(filteredList) {
+                    RepoHeader(
+                        ownerAvatarUrl = it.ownerAvatarUrl,
+                        ownerName = it.ownerName,
+                        repoName = it.repoName,
+                        fontFamily = fontFamily,
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .clickable { onItemClick(it.ownerName, it.repoName) }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -162,42 +188,8 @@ fun RepoItem(
             .clickable { onItemClick(homeRepositoryItem.ownerName, homeRepositoryItem.repoName) }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                CircularAvatarImage(
-                    avatarUrl = homeRepositoryItem.ownerAvatarUrl,
-                    modifier = Modifier
-                        .padding(end = 4.dp)
-                        .size(25.dp)
-                )
-                Text(
-                    text = homeRepositoryItem.ownerName,
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.Light
-                    )
-                )
-                Text(
-                    text = "/",
-                    color = Color.Gray,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.SemiBold,
-                        fontStyle = FontStyle.Italic
-                    )
-                )
-                Text(
-                    text = homeRepositoryItem.repoName,
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    maxLines = 1,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
+            homeRepositoryItem.let { item ->
+                RepoHeader(item.ownerAvatarUrl, item.ownerName, item.repoName, fontFamily)
             }
             Text(
                 text = homeRepositoryItem.repoDescription
@@ -223,6 +215,53 @@ fun RepoItem(
                 )
             }*/
         }
+    }
+}
+
+@Composable
+private fun RepoHeader(
+    ownerAvatarUrl: String,
+    ownerName: String,
+    repoName: String,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+        CircularAvatarImage(
+            avatarUrl = ownerAvatarUrl,
+            modifier = Modifier
+                .padding(end = 4.dp)
+                .size(25.dp)
+        )
+        Text(
+            text = ownerName,
+            modifier = Modifier.padding(horizontal = 4.dp),
+            style = TextStyle(
+                fontSize = 12.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Light
+            )
+        )
+        Text(
+            text = "/",
+            color = Color.Gray,
+            style = TextStyle(
+                fontSize = 12.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontStyle = FontStyle.Italic
+            )
+        )
+        Text(
+            text = repoName,
+            modifier = Modifier.padding(horizontal = 4.dp),
+            maxLines = 1,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold
+            )
+        )
     }
 }
 
